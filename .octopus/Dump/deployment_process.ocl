@@ -547,9 +547,7 @@ step "run-a-scriptff" {
                 # Install the cli
                 curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION="2.2.0" bash
                 # Setup configuration values
-                SENTRY_AUTH_TOKEN=
-                c82006cd99254a56bedae2cb1d3da60ec5d353e4f8c44cc891ea954c1d537b6c
-                 # From internal integration: node Release Integration 
+                SENTRY_AUTH_TOKEN=                 # From internal integration: node Release Integration 
                 SENTRY_ORG=ametektci
                 SENTRY_PROJECT=node
                 VERSION=`sentry-cli releases propose-version`
