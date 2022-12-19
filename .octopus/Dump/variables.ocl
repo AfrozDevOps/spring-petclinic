@@ -3,7 +3,7 @@ variable "GithubRepo" {
 }
 
 variable "GithubToken" {
-    value "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" {}
+    value "" {}
 }
 
 variable "RaygunApiKey" {
