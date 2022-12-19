@@ -1,5 +1,10 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
+import jetbrains.buildServer.configs.kotlin.buildSteps.dockerCommand
+import jetbrains.buildServer.configs.kotlin.buildSteps.dockerCompose
+import jetbrains.buildServer.configs.kotlin.buildSteps.gradle
+import jetbrains.buildServer.configs.kotlin.buildSteps.maven
+import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
 /*
@@ -36,6 +41,30 @@ object Testing : BuildType({
 
     vcs {
         root(DslContext.settingsRoot)
+    }
+
+    steps {
+        dockerCommand {
+            commandType = build {
+                source = file {
+                    path = ".devcontainer/Dockerfile"
+                }
+            }
+        }
+        dockerCompose {
+            file = "docker-compose.yml"
+        }
+        maven {
+            goals = "clean test"
+            runnerArgs = "-Dmaven.test.failure.ignore=true"
+        }
+        gradle {
+            tasks = "clean build"
+            gradleWrapperPath = ""
+        }
+        script {
+            scriptContent = "call mvnw.cmd"
+        }
     }
 
     triggers {
