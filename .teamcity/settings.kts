@@ -60,6 +60,7 @@ object Testing : BuildType({
             runnerArgs = "-Dmaven.test.failure.ignore=true"
         }
         gradle {
+            enabled = false
             tasks = "clean build"
             gradleWrapperPath = ""
         }
