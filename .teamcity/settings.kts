@@ -65,6 +65,7 @@ object Testing : BuildType({
             gradleWrapperPath = ""
         }
         script {
+            enabled = false
             scriptContent = "call mvnw.cmd"
         }
     }
