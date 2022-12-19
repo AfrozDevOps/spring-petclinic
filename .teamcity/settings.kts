@@ -55,6 +55,7 @@ object Testing : BuildType({
             file = "docker-compose.yml"
         }
         maven {
+            enabled = false
             goals = "clean test"
             runnerArgs = "-Dmaven.test.failure.ignore=true"
         }
