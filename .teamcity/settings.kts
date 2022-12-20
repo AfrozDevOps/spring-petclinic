@@ -37,7 +37,7 @@ project {
 }
 
 object Testing : BuildType({
-    name = "testing"
+    name = "testing config as code"
 
     vcs {
         root(DslContext.settingsRoot)
