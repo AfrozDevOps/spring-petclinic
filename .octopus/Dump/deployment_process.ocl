@@ -1,0 +1,160 @@
+step "send-an-email" {
+    name = "Send an Email"
+
+    action {
+        action_type = "Octopus.Email"
+        properties = {
+            Octopus.Action.Email.Body = <<-EOT
+                
+                
+                <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="https://yzfnxb.stripocdn.email/content/guids/CABINET_d75db4ce83dae22fd206be1dc867d89b93016c6cedaa16c4a8c835b24e404c64/images/octopuslogo.jpg" alt style="display: block;" width="560"></a></td>
+                <td align="left" class="esd-block-text">
+                    <p style="font-size: 28px;"><strong>#{Octopus.Space.Name} / #{Octopus.ProjectGroup.Name} / #{Octopus.Project.Name}</strong></p>
+                </td>
+                <td align="center" class="esd-block-spacer es-p20" style="font-size:0">
+                    <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td style="border-bottom: 1px solid #cccccc; background: unset; height: 1px; width: 100%; margin: 0px; --darkreader-inline-border-bottom:#3e4446; --darkreader-inline-bgimage: unset; --darkreader-inline-bgcolor: unset;" data-darkreader-inline-border-bottom data-darkreader-inline-bgimage data-darkreader-inline-bgcolor></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td align="center" class="esd-block-text">
+                    <p style="font-size: 25px; color: rgb(114, 203, 58); --darkreader-inline-color:#7fd04d;" data-darkreader-inline-color>Deployment #{Octopus.Action[Update Amazon ECS Service].Status.Code}</p>
+                </td>
+                RED colour -- <td align="center" class="esd-block-text">
+                    <p style="font-size: 25px; color: rgb(208, 65, 61); --darkreader-inline-color:#d4524e;" data-darkreader-inline-color>Deployment #{Octopus.Action[Update Amazon ECS Service].Status.Code}</p>
+                </td>
+                
+                <td align="left" class="esd-block-text">
+                    <p><br></p>
+                    <table border="3" align="center" cellspacing="2" cellpadding="2" style="height:200px;width:600px;" class="es-table">
+                        <tbody>
+                            <tr>
+                                <td>Project Name</td>
+                                <td>#{Octopus.Project.Name}</td>
+                            </tr>
+                            <tr>
+                                <td>Project Version</td>
+                                <td>#{Octopus.Release.Number}</td>
+                            </tr>
+                            <tr>
+                                <td>Project Environment</td>
+                                <td>#{Octopus.Environment.Name}</td>
+                            </tr>
+                            <tr>
+                                <td>GitHub Commit</td>
+                                <td><br>#{Octopus.Action[Deployment Script].Output.VCSCommitNumber}</td>
+                            </tr>
+                            <tr>
+                                <td>GitHub Comment</td>
+                                <td>#{Octopus.Action[Deployment Script].Output.GitComment}</td>
+                            </tr>
+                            <tr>
+                                <td>GitHub Issues</td>
+                                <td>#{Octopus.Action[Deployment Script].Output.VCSRoot}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td align="center" class="esd-block-text">
+                    <p style="color: rgb(51, 51, 51); --darkreader-inline-color:#c8c3bc;" data-darkreader-inline-color>The Release <span style="font-size:17px;"><strong><em>#{Octopus.Release.Number}</em></strong></span>&nbsp;is created by <span style="font-size:17px;"><strong><em>#{Octopus.Deployment.CreatedBy.DisplayName}</em></strong></span>&nbsp;on <strong>#{Octopus.Release.Created}</strong>.</p>
+                </td>
+                <td class="esd-stripe" align="center">
+                    <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="600" data-darkreader-inline-bgcolor style="--darkreader-inline-bgcolor:#181a1b;">
+                        <tbody>
+                            <tr>
+                                <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                    <!--[if mso]><table width="560" cellpadding="0" cellspacing="0"><tr><td width="193.33333333333334" valign="top"><![endif]-->
+                                    <table cellpadding="0" cellspacing="0" class="es-left" align="left">
+                                        <tbody>
+                                            <tr>
+                                                <td width="173.33333333333334" class="es-m-p0r es-m-p20b esd-container-frame" align="center">
+                                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="center" class="esd-block-button">
+                                                                    <!--[if mso]><a href="https://ametekstc.octopus.app#{Octopus.Web.DeploymentLink}" target="_blank" hidden>
+                	<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" esdevVmlButton href="https://ametekstc.octopus.app#{Octopus.Web.DeploymentLink}" 
+                                style="height:41px; v-text-anchor:middle; width:171px" arcsize="50%" stroke="f"  fillcolor="#0b7cb2">
+                		<w:anchorlock></w:anchorlock>
+                		<center style='color:#e8e6e3; font-family:arial, "helvetica neue", helvetica, sans-serif; font-size:15px; font-weight:400; line-height:15px;  mso-text-raise:1px'>Octopus Deploy</center>
+                	</v:roundrect></a>
+                <![endif]-->
+                                                                    <!--[if !mso]><!-- --><span class="msohide es-button-border-1672827224584 es-button-border" style="--darkreader-inline-bgimage: initial; --darkreader-inline-bgcolor:#09638e; --darkreader-inline-border-top:#8b961d; --darkreader-inline-border-right:#8b961d; --darkreader-inline-border-bottom:#8b961d; --darkreader-inline-border-left:#8b961d; border-width: 0px; border-color: #c5d529; background: #0b7cb2;" data-darkreader-inline-bgimage data-darkreader-inline-bgcolor data-darkreader-inline-border-top data-darkreader-inline-border-right data-darkreader-inline-border-bottom data-darkreader-inline-border-left><a href="https://ametekstc.octopus.app#{Octopus.Web.DeploymentLink}" class="es-button es-button-1672827224566" target="_blank" style="--darkreader-inline-bgimage: initial; --darkreader-inline-bgcolor:#0b7cb2; --darkreader-inline-border-top:#0a70a1; --darkreader-inline-border-right:#0a70a1; --darkreader-inline-border-bottom:#0a70a1; --darkreader-inline-border-left:#0a70a1; background: #26aff1; border-color: #26aff1;" data-darkreader-inline-bgimage data-darkreader-inline-bgcolor data-darkreader-inline-border-top data-darkreader-inline-border-right data-darkreader-inline-border-bottom data-darkreader-inline-border-left>Octopus Deploy</a></span>
+                                                                    <!--<![endif]-->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td class="es-hidden" width="20"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--[if mso]></td><td width="173.33333333333334" valign="top"><![endif]-->
+                                    <table cellpadding="0" cellspacing="0" class="es-left" align="left">
+                                        <tbody>
+                                            <tr>
+                                                <td width="173.33333333333334" class="es-m-p20b esd-container-frame" align="center">
+                                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="center" class="esd-block-button">
+                                                                    <!--[if mso]><a href="#{Octopus.Action[Deployment Script].Output.BuildUrl}" target="_blank" hidden>
+                	<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" esdevVmlButton href="#{Octopus.Action[Deployment Script].Output.BuildUrl}" 
+                                style="height:41px; v-text-anchor:middle; width:118px" arcsize="50%" stroke="f"  fillcolor="#2e4396">
+                		<w:anchorlock></w:anchorlock>
+                		<center style='color:#e2dfdc; font-family:arial, "helvetica neue", helvetica, sans-serif; font-size:15px; font-weight:400; line-height:15px;  mso-text-raise:1px'>TeamCity</center>
+                	</v:roundrect></a>
+                <![endif]-->
+                                                                    <!--[if !mso]><!-- --><span class="msohide es-button-border-1672897385529 es-button-border" style="--darkreader-inline-bgimage: initial; --darkreader-inline-bgcolor:#2e4396; border-radius: 68px; --darkreader-inline-border-top:#259738; --darkreader-inline-border-right:#259738; --darkreader-inline-border-bottom:#259738; --darkreader-inline-border-left:#259738; border-color: #2cb543; border-width: 0px; background: #3a54bc;" data-darkreader-inline-bgimage data-darkreader-inline-bgcolor data-darkreader-inline-border-top data-darkreader-inline-border-right data-darkreader-inline-border-bottom data-darkreader-inline-border-left><a href="#{Octopus.Action[Deployment Script].Output.BuildUrl}" class="es-button es-button-1672897385510" style="--darkreader-inline-bgimage: initial; --darkreader-inline-bgcolor:#2e4396; --darkreader-inline-border-top:#2b3e8a; --darkreader-inline-border-right:#2b3e8a; --darkreader-inline-border-bottom:#2b3e8a; --darkreader-inline-border-left:#2b3e8a; --darkreader-inline-color:#e2dfdc; border-radius: 68px; background: #3a54bc; border-color: #3a54bc; color: #f5f6f6;" data-darkreader-inline-bgimage data-darkreader-inline-bgcolor data-darkreader-inline-border-top data-darkreader-inline-border-right data-darkreader-inline-border-bottom data-darkreader-inline-border-left data-darkreader-inline-color>TeamCity</a></span>
+                                                                    <!--<![endif]-->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--[if mso]></td><td width="20"></td><td width="173.33333333333334" valign="top"><![endif]-->
+                                    <table cellpadding="0" cellspacing="0" class="es-right" align="right">
+                                        <tbody>
+                                            <tr>
+                                                <td width="173.33333333333334" align="center" class="esd-container-frame">
+                                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="center" class="esd-block-button">
+                                                                    <!--[if mso]><a href="#{Octopus.Action[Deployment Script].Output.GitLink}" target="_blank" hidden>
+                	<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" esdevVmlButton href="#{Octopus.Action[Deployment Script].Output.GitLink}" 
+                                style="height:41px; v-text-anchor:middle; width:99px" arcsize="50%" stroke="f"  fillcolor="#282c2d">
+                		<w:anchorlock></w:anchorlock>
+                		<center style='color:#e8e0d8; font-family:arial, "helvetica neue", helvetica, sans-serif; font-size:15px; font-weight:400; line-height:15px;  mso-text-raise:1px'>GitHub</center>
+                	</v:roundrect></a>
+                <![endif]-->
+                                                                    <!--[if !mso]><!-- --><span class="msohide es-button-border-1672893972902 es-button-border" style="--darkreader-inline-bgimage: initial; --darkreader-inline-bgcolor:#282c2d; --darkreader-inline-border-top:#28a33c; --darkreader-inline-border-right:#28a33c; --darkreader-inline-border-bottom:#28a33c; --darkreader-inline-border-left:#28a33c; border-width: 0px; background: #e2e2e2; border-color: #228b33;" data-darkreader-inline-bgimage data-darkreader-inline-bgcolor data-darkreader-inline-border-top data-darkreader-inline-border-right data-darkreader-inline-border-bottom data-darkreader-inline-border-left><a href="#{Octopus.Action[Deployment Script].Output.GitLink}" class="es-button es-button-1672893972880" style="--darkreader-inline-bgimage: initial; --darkreader-inline-bgcolor:#282c2d; --darkreader-inline-border-top:#383d3f; --darkreader-inline-border-right:#383d3f; --darkreader-inline-border-bottom:#383d3f; --darkreader-inline-border-left:#383d3f; --darkreader-inline-color:#e8e0d8; color: #f9f7f5; background: #e2e2e2; border-color: #e2e2e2;" data-darkreader-inline-bgimage data-darkreader-inline-bgcolor data-darkreader-inline-border-top data-darkreader-inline-border-right data-darkreader-inline-border-bottom data-darkreader-inline-border-left data-darkreader-inline-color>GitHub</a></span>
+                                                                    <!--<![endif]-->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--[if mso]></td></tr></table><![endif]-->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            EOT
+            Octopus.Action.Email.Subject = "[Deployment #{Octopus.Action[Update Amazon ECS Service].Status.Code}] #{Octopus.Project.Name}:#{Octopus.Release.Number}--#{Octopus.Environment.Name}"
+            Octopus.Action.Email.To = "sunkesula.afroz@ametek.com"
+        }
+        worker_pool_variable = ""
+    }
+}
