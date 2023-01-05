@@ -154,7 +154,179 @@ step "send-an-email" {
             EOT
             Octopus.Action.Email.Subject = "[Deployment #{Octopus.Action[Update Amazon ECS Service].Status.Code}] #{Octopus.Project.Name}:#{Octopus.Release.Number}--#{Octopus.Environment.Name}"
             Octopus.Action.Email.To = "sunkesula.afroz@ametek.com"
+            Octopus.Action.RunOnServer = "false"
         }
         worker_pool_variable = ""
+    }
+}
+
+step "deployment-script" {
+    name = "Deployment Script"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                $changeListRaw = $OctopusParameters["Octopus.Deployment.Changes"]
+                $changeList = $changeListRaw | ConvertFrom-Json
+                
+                foreach ($change in $changeList)
+                {
+                    $ReleaseNumber = "$($change.Version)"
+                
+                    foreach ($buildInformation in $change.BuildInformation)
+                    {
+                        $Package = "$($buildInformation.PackageId)"
+                        $Version = "$($buildInformation.Version)"
+                        $BuildUrl = "$($buildInformation.BuildUrl)"
+                        $VCSRoot = "$($buildInformation.VcsRoot)/issues"
+                        $VCSCommitNumber = "$($buildInformation.VcsCommitNumber)"
+                    }
+                    foreach ($commit in $change.Commits)
+                    {
+                        $GitHash = "$($Commit.Id)"
+                        $GitComment = "$($Commit.Comment)"
+                        $GitLink = "$($Commit.LinkUrl)"
+                    }
+                    foreach ($workItem in $change.WorkItems)
+                    {
+                        $Id = "$($WorkItem.Id)"
+                        $LinkUrl = "$($WorkItem.LinkUrl)"
+                        $Source = "$($WorkItem.Source)"
+                        $Description = "$($WorkItem.Description)"
+                    }
+                }
+                #Write-host $Description,$Source,$LinkUrl,$Id,$GitLink,$GitComment,$GitHash,$VCSCommitNumber,$VCSRoot,$BuildUrl,$Version,$Package, $ReleaseNumber
+                Set-OctopusVariable -name "Description" -value $Description
+                Set-OctopusVariable -name "Source" -value $Source
+                Set-OctopusVariable -name "LinkUrl" -value $LinkUrl
+                Set-OctopusVariable -name "Id" -value $Id
+                Set-OctopusVariable -name "GitLink" -value $GitLink
+                Set-OctopusVariable -name "GitComment" -value $GitComment
+                Set-OctopusVariable -name "GitHash" -value $GitHash
+                Set-OctopusVariable -name "VCSCommitNumber" -value $VCSCommitNumber
+                Set-OctopusVariable -name "VCSRoot" -value $VCSRoot
+                Set-OctopusVariable -name "BuildUrl" -value $BuildUrl
+                Set-OctopusVariable -name "Version" -value $Version
+                Set-OctopusVariable -name "Package" -value $Package
+                Set-OctopusVariable -name "ReleaseNumber" -value $ReleaseNumber
+            EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "stcapplications"
+    }
+}
+
+step "run-a-script-for-raygun" {
+    name = "Run a Script For Raygun"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                Write-Host "Adding deployment in Raygun"+
+                
+                $githubSha = ""
+                if ((Test-Path variable:\GithubToken) -And (Test-Path variable:\GithubRepo)) {
+                    try {
+                        $repo = "https://api.github.com/repos/" + $OctopusParameters['Octopus.Action[Run a Script For Vault].Output.Secret-GithubRepo']
+                        $tagName = "build-" + $OctopusParameters["Octopus.Action[Update Amazon ECS Service].Package.NuGetPackageVersion"]
+                        $githuburl = "$repo/git/refs/tags/"+ $tagName + "?access_token=" + $OctopusParameters['Octopus.Action[Run a Script For Vault].Output.Secret-GithubToken']
+                        $tagOutput = Invoke-RestMethod -Uri $githuburl
+                        $githubCommitUrl = $tagOutput.object.url + "?access_token=" + $OctopusParameters['Octopus.Action[Run a Script For Vault].Output.Secret-GithubToken']
+                        $output = Invoke-RestMethod -Uri $githubCommitUrl
+                        $githubSha = $output.object.sha
+                    }
+                   catch {
+                        Write-Host "Couldn't find Git tag"
+                   }
+                }
+                
+                $deploymentId = $OctopusParameters['Octopus.Release.Number']
+                $ownerName = $OctopusParameters['Octopus.Deployment.CreatedBy.DisplayName']
+                $emailAddress = $OctopusParameters['Octopus.Deployment.CreatedBy.EmailAddress']
+                $comment = $OctopusParameters['Octopus.Release.Notes'];
+                
+                $command = ConvertTo-Json @{
+                    apiKey = $OctopusParameters['Octopus.Action[Run a Script For Vault].Output.Secret-RaygunApiKey']
+                    version = $deploymentId
+                    ownerName = $ownerName
+                    emailAddress = $emailAddress
+                    comment = $comment
+                    scmIdentifier = $githubSha
+                }
+                
+                $url = "https://app.raygun.com/deployments?authToken=" + $OctopusParameters['Octopus.Action[Run a Script For Vault].Output.Secret-RaygunAuthToken']
+                try {
+                    Invoke-RestMethod -Uri $url -Body $command -Method Post -ContentType "application/json"
+                    Write-Host "Added deployment in Raygun"
+                } catch {
+                    Write-Host "Error received when adding deployment in Raygun: " $_
+                }
+            EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "stcapplications"
+    }
+}
+
+step "run-a-script-for-vault" {
+    name = "Run a Script For Vault"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                cd C:\Users\Administrator\Downloads\vault_1.12.1_windows_amd64
+                $env:PATH =$env:PATH+";."
+                $env:VAULT_NAMESPACE="admin/STCApplications/"
+                $env:VAULT_ADDR="https://stcapplications-cluster-public-vault-3fa2c317.4787661a.z1.hashicorp.cloud:8200"
+                vault login -method=userpass  username="octopus-forcesetup" password="0ct0pu$"
+                $ASPNETCORE_ENVIRONMENT = vault kv get -mount=ForceSetup -field=ASPNETCORE_ENVIRONMENT ForceSetupDev
+                $ApiKey = vault kv get -mount=ForceSetup -field=ApiKey ForceSetupDev
+                $AwsAccessKeyId = vault kv get -mount=ForceSetup -field=AwsAccessKeyId ForceSetupDev
+                $ClientId = vault kv get -mount=ForceSetup -field=ClientId ForceSetupDev
+                $ClientSecret = vault kv get -mount=ForceSetup -field=ClientSecret ForceSetupDev
+                $LogGroup = vault kv get -mount=ForceSetup -field=LogGroup ForceSetupDev
+                $ManagementApiUrl = vault kv get -mount=ForceSetup -field=ManagementApiUrl ForceSetupDev
+                $MetadataAddress = vault kv get -mount=ForceSetup -field=MetadataAddress ForceSetupDev
+                $OrganizationName = vault kv get -mount=ForceSetup -field=OrganizationName ForceSetupDev
+                $Region = vault kv get -mount=ForceSetup -field=Region ForceSetupDev
+                $SecretAccessKey = vault kv get -mount=ForceSetup -field=SecretAccessKey ForceSetupDev
+                $SignupInvitationUrl = vault kv get -mount=ForceSetup -field=SignupInvitationUrl ForceSetupDev
+                $UpdateServiceUrl = vault kv get -mount=ForceSetup -field=UpdateServiceUrl ForceSetupDev
+                $UserPoolId = vault kv get -mount=ForceSetup -field=UserPoolId ForceSetupDev
+                $GithubRepo = vault kv get -mount=Raygun -field=GithubRepo FS-API-Dev
+                $GithubToken = vault kv get -mount=Raygun -field=GithubToken FS-API-Dev
+                $RaygunApiKey = vault kv get -mount=Raygun -field=RaygunApiKey FS-API-Dev
+                $RaygunAuthToken = vault kv get -mount=Raygun -field=RaygunAuthToken FS-API-Dev
+                #$app_version = vault kv get -mount=ForceSetup -field=app_version ForceSetupDev
+                
+                Set-OctopusVariable -name "Secret-ENV" -value "$ASPNETCORE_ENVIRONMENT"
+                Set-OctopusVariable -name "Secret-ApiKey" -value "$ApiKey"
+                Set-OctopusVariable -name "Secret-AwsAccessKeyId" -value "$AwsAccessKeyId"
+                Set-OctopusVariable -name "Secret-ClientId" -value "$ClientId"
+                Set-OctopusVariable -name "Secret-ClientSecret" -value "$ClientSecret"
+                Set-OctopusVariable -name "Secret-LogGroup" -value "$LogGroup"
+                Set-OctopusVariable -name "Secret-ManagementApiUrl" -value "$ManagementApiUrl"
+                Set-OctopusVariable -name "Secret-MetadataAddress" -value "$MetadataAddress"
+                Set-OctopusVariable -name "Secret-OrganizationName" -value "$OrganizationName"
+                Set-OctopusVariable -name "Secret-Region" -value "$Region"
+                Set-OctopusVariable -name "Secret-SecretAccessKey" -value "$SecretAccessKey"
+                Set-OctopusVariable -name "Secret-SignupInvitationUrl" -value "$SignupInvitationUrl"
+                Set-OctopusVariable -name "Secret-UpdateServiceUrl" -value "$UpdateServiceUrl"
+                Set-OctopusVariable -name "Secret-UserPoolId" -value "$UserPoolId"
+                Set-OctopusVariable -name "Secret-GithubRepo" -value "$GithubRepo"
+                Set-OctopusVariable -name "Secret-GithubToken" -value "$GithubToken"
+                Set-OctopusVariable -name "Secret-RaygunApiKey" -value "$RaygunApiKey"
+                Set-OctopusVariable -name "Secret-RaygunAuthToken" -value "$RaygunAuthToken"
+                #Set-OctopusVariable -name "Secret-app_version" -value "$app_version"
+            EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "stcapplications"
     }
 }
