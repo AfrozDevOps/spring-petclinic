@@ -344,7 +344,7 @@ step "run-a-script" {
                 cd C:\Users\Administrator\Downloads\git\Chatillon.ForceSetup
                 $env:PATH =$env:PATH+";."
                 pwd 
-                git pull
+                #git pull
                 #$Author = git log -1 --pretty=format:%an
                 #write-Host $Author
             EOT
