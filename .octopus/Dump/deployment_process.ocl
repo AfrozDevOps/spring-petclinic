@@ -348,9 +348,9 @@ step "run-a-script" {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 rm C:\Users\Administrator\Downloads\git\Chatillon.ForceSetup -r -force
                 cd C:\Users\Administrator\Downloads\git\
-                Write-host git clone https://$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGithubUser']:$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGitHubAccessToken']@github.com/AMETEKTCI/Chatillon.ForceSetup.git
+                Write-host 'git clone https://$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGithubUser']:$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGitHubAccessToken']@github.com/AMETEKTCI/Chatillon.ForceSetup.git'
                 git clone https://$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGithubUser']:$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGitHubAccessToken']@github.com/AMETEKTCI/Chatillon.ForceSetup.git
-                #Write-host git clone https://$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGithubUser']:$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGitHubAccessToken']@github.com/AMETEKTCI/Chatillon.ForceSetup.git
+                Write-host git clone https://$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGithubUser']:$OctopusParameters['Octopus.Action[Run a Script For Vault].Output.AmetekTciSoftwareBuilderGitHubAccessToken']@github.com/AMETEKTCI/Chatillon.ForceSetup.git
                 cd Chatillon.ForceSetup/
                 $Author = git log -1 --pretty=format:%an
                 write-Host $Author
