@@ -326,6 +326,11 @@ step "run-a-script-for-vault" {
                 Set-OctopusVariable -name "Secret-RaygunApiKey" -value "$RaygunApiKey"
                 Set-OctopusVariable -name "Secret-RaygunAuthToken" -value "$RaygunAuthToken"
                 #Set-OctopusVariable -name "Secret-app_version" -value "$app_version"
+                vault login -method=userpass  username="teamcity-login" password="T3@mciTy"
+                $AmetekTciSoftwareBuilderGithubUser =vault kv get -mount=Teamcity -field=AmetekTciSoftwareBuilderGithubUser TeamCity
+                $AmetekTciSoftwareBuilderGitHubAccessToken =vault kv get -mount=Teamcity -field=AmetekTciSoftwareBuilderGitHubAccessToken-VCS TeamCity
+                Set-OctopusVariable -name "AmetekTciSoftwareBuilderGithubUser" -value "$AmetekTciSoftwareBuilderGithubUser"
+                Set-OctopusVariable -name "AmetekTciSoftwareBuilderGitHubAccessToken" -value "$AmetekTciSoftwareBuilderGitHubAccessToken"
             EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
