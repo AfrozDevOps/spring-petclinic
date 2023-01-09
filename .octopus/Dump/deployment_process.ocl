@@ -346,7 +346,8 @@ step "run-a-script" {
                 pwd 
                 git config --global --add safe.directory C:/Users/Administrator/Downloads/git/Chatillon.ForceSetup
                 git
-                git pull
+                git fetch
+                #git pull
                 $Author = git log -1 --pretty=format:%an
                 write-Host $Author
             EOT
