@@ -341,16 +341,12 @@ step "run-a-script" {
         action_type = "Octopus.Script"
         properties = {
             Octopus.Action.Script.ScriptBody = <<-EOT
-                cd C:\Users\Administrator\Downloads\git\Chatillon.ForceSetup
-                $env:PATH =$env:PATH+";."
-                pwd 
-                git config --global --add safe.directory C:/Users/Administrator/Downloads/git/Chatillon.ForceSetup
-                git config credential.helper store
-                git
-                #git fetch
-                git pull
+                cd C:\Users\Administrator\Downloads\git\
+                git clone https://AFROZDD77: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@github.com/AMETEKTCI/ .git
+                cd Chatillon.ForceSetup/
                 $Author = git log -1 --pretty=format:%an
                 write-Host $Author
+                rm .\Chatillon.ForceSetup\ -r -force
             EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
