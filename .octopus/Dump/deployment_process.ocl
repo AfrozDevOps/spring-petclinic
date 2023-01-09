@@ -330,7 +330,7 @@ step "run-a-script-for-vault" {
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
-        worker_pool = "stcapplications"
+        worker_pool = "for-vault"
     }
 }
 
