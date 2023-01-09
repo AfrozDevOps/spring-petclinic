@@ -344,9 +344,11 @@ step "run-a-script" {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 cd C:\Users\Administrator\Downloads\git\Chatillon.ForceSetup
                 $env:PATH =$env:PATH+";."
-                git pull
-                $Author = git log -1 --pretty=format:%an
-                write-Host $Author
+                pwd 
+                git
+                #git pull
+                #$Author = git log -1 --pretty=format:%an
+                #write-Host $Author
             EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
