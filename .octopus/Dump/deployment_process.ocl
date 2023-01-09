@@ -3,6 +3,7 @@ step "send-an-email" {
 
     action {
         action_type = "Octopus.Email"
+        is_disabled = true
         properties = {
             Octopus.Action.Email.Body = <<-EOT
                 
@@ -165,6 +166,7 @@ step "deployment-script" {
 
     action {
         action_type = "Octopus.Script"
+        is_disabled = true
         properties = {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 $changeListRaw = $OctopusParameters["Octopus.Deployment.Changes"]
@@ -223,6 +225,7 @@ step "run-a-script-for-raygun" {
 
     action {
         action_type = "Octopus.Script"
+        is_disabled = true
         properties = {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 Write-Host "Adding deployment in Raygun"+
@@ -277,6 +280,7 @@ step "run-a-script-for-vault" {
 
     action {
         action_type = "Octopus.Script"
+        is_disabled = true
         properties = {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 cd C:\Users\Administrator\Downloads\vault_1.12.1_windows_amd64
