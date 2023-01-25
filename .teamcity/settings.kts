@@ -46,6 +46,7 @@ object Testing : BuildType({
 
     steps {
         dockerCommand {
+            enabled = false
             commandType = build {
                 source = file {
                     path = ".devcontainer/Dockerfile"
