@@ -54,6 +54,7 @@ object Testing : BuildType({
             }
         }
         dockerCompose {
+            enabled = false
             file = "docker-compose.yml"
         }
         maven {
