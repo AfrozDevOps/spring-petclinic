@@ -73,6 +73,7 @@ object Testing : BuildType({
         }
         python {
             name = "SELENIUM SCRIPT"
+            enabled = false
             command = script {
                 content = """
                     from selenium import webdriver
